@@ -33,8 +33,8 @@ class DML:
         return self.cursor.fetchone()
 
 
-    def insertar(self, query):
-        self.cursor.execute(query)
+    def insertar(self, query2, values):
+        self.cursor.execute(query2, values)
         self.db.commit()
 
     def actualizar(self, query):
