@@ -1,0 +1,59 @@
+CREATE DATABASE practicas_profesionales;
+USE practicas_profesionales;
+
+CREATE TABLE users(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    user_name VARCHAR(50) UNIQUE,
+    passwrd VARCHAR(255) NOT NULL,
+    email VARCHAR(100)NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    rol VARCHAR(50) NOT NULL,
+    career VARCHAR(100),
+    cellphone VARCHAR(20),
+    year_study INT,
+    id_enterprise INT,
+    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_enterprise) REFERENCES enterprises(id));
+
+CREATE TABLE enterprises(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    name_ent VARCHAR(100) UNIQUE,
+    direction VARCHAR(255),
+    telephone VARCHAR(20) NOT NULL,
+    email VARCHAR(100),
+    contact_name VARCHAR(100) NOT NULL,
+    contact_last_name VARCHAR(100) NOT NULL,
+    contact_email VARCHAR(100) NOT NULL,
+    contact_telephone VARCHAR(20) NOT NULL,
+    register_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+CREATE TABLE vacancies(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    id_enterprise INT,
+    title VARCHAR(100) NOT NULL,
+    descriptions TEXT,
+    requisitos TEXT NOT NULL,
+    location VARCHAR(100) NOT NULL,
+    type_vac VARCHAR(20) NOT NULL,
+    number_available INT NOT NULL,
+    posting_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deadline_date DATE,
+    FOREIGN KEY (id_enterprise) REFERENCES enterprises(id));
+
+CREATE TABLE requests(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    id_user INT,
+    id_vacancy INT,
+    request_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status_req VARCHAR(50) NOT NULL,
+    FOREIGN KEY (id_user) REFERENCES users(id),
+    FOREIGN KEY (id_vacancy) REFERENCES vacancies(id));
+
+CREATE TABLE pdfile(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    id_user INT,
+    location_file VARCHAR(255),
+    upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_user) REFERENCES users(id));
