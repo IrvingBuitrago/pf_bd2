@@ -1,18 +1,27 @@
-from flask import Flask, request, jsonify, render_template, url_for, redirect
+from flask import Flask, request, jsonify, render_template, url_for, redirect, session
 from conex import myconex
 from passlib.hash import pbkdf2_sha256
 
 app = Flask(__name__)
+app.secret_key = 'mykey'
 
 instancia = myconex
 
 @app.route('/dash/estudiantes', methods= ['GET', 'POST'])
 def dashboard_estudiante():
-    return render_template('dash.html')
+    if 'user' in session:
+        username = session['user']
+        return render_template('dash.html')
+    else:
+        return redirect(url_for('logIn'))
 
 @app.route('/dash/admin', methods=['GET'])
 def dashboard_admin():
-    return render_template('dash_admin.html')
+    if 'user' in session:
+        username = session['user']
+        return render_template('dash_admin.html')
+    else:
+        return redirect(url_for('logIn'))
 
 @app.route('/', methods=['GET', 'POST'])
 def logIn():
@@ -21,20 +30,22 @@ def logIn():
         password = request.form['password']
         instancia.conectar()
         query = 'SELECT passwrd FROM users WHERE user_name = %s'
-        result = instancia.consultar(query, (username))
+        result = instancia.consultar(query, (username,), fetchall=False)
         try:
             if result and pbkdf2_sha256.verify(password, result[0]):
                 query = 'SELECT rol FROM users WHERE user_name = %s'
-                result = instancia.consultar(query, (username,))
-                if result:
-                    if result[0] == 'Estudiante':
-                        # Si el usuario es estudiante, redirigir al dashboard de estudiantes
-                        instancia.cerrar_conex()
-                        return redirect(url_for('dashboard_estudiante'))
-                    else:
-                        # Si el usuario no es estudiante, redirigir al dashboard de administrador
-                        instancia.cerrar_conex()
-                        return redirect(url_for('dashboard_admin'))
+                result = instancia.consultar(query, (username,), fetchall=False)
+                rol = result[0]
+                if rol == 'Estudiante':
+                    session['user'] = {'username': username, 'rol': rol}
+                    # Si el usuario es estudiante, redirigir al dashboard de estudiantes
+                    instancia.cerrar_conex()
+                    return redirect(url_for('dashboard_estudiante'))
+                else:
+                    session['user'] = {'username': username, 'rol': rol}
+                    # Si el usuario no es estudiante, redirigir al dashboard de administrador
+                    instancia.cerrar_conex()
+                    return redirect(url_for('dashboard_admin'))
         except Exception as e:
             return render_template('login.html', error=f'{str(e)}')
         else:
@@ -71,7 +82,7 @@ def registro():
                 values = (username, password_hash, email, first_name, last_name, rol, career, cellphone, year_study)
                 instancia.insertar(query2, values)
                 instancia.cerrar_conex()
-                return redirect(url_for('dashboard_estudiante'))
+                return redirect(url_for('logIn'))
             except Exception as e:
                 instancia.cerrar_conex()
                 # Si ocurre un error, mostrar mensaje de error genérico
@@ -110,6 +121,52 @@ def registro_empresas():
                 return render_template('registro_empresa.html', error=f'Error en el registro. Error: {str(e)}')
     else:
         return render_template('registro_empresa.html')
+
+@app.route('/perfil/estudiante', methods=['GET', 'POST'])
+def perfil_estudiante():
+    if request.method == 'GET':
+        if 'user' in session:
+            userinfo = session['user']
+            username = userinfo['username']
+            rol = userinfo['rol']
+            instancia.conectar()
+            query = 'SELECT * FROM users WHERE user_name = %s'
+            result = instancia.consultar(query, (username,), fetchall=True)
+            instancia.cerrar_conex()
+            try:
+                if result:
+                    result_row = result[0]
+                    if rol == 'Estudiante':
+                        return render_template('perfil_est.html', result=result)
+            except Exception as e:
+                return f'Error: {str(e)}'
+        else:
+            return redirect(url_for('logIn'))
+    else:
+        return redirect(url_for('dashboard_estudiante'))
+
+@app.route('/perfil/administrativo', methods=['GET', 'POST'])
+def perfil_administrativo():
+    if request.method == 'GET':
+        if 'user' in session:
+            userinfo = session['user']
+            username = userinfo['username']
+            rol = userinfo['rol']
+            instancia.conectar()
+            query = 'SELECT * FROM users WHERE user_name = %s'
+            result = instancia.consultar(query, (username,), fetchall=True)
+            instancia.cerrar_conex()
+            try:
+                if result:
+                    result_row = result[0]
+                    if rol == 'Administrativo':
+                        return render_template('perfil_adm.html', result=result)
+            except Exception as e:
+                return f'Error: {str(e)}'
+        else:
+            return redirect(url_for('logIn'))
+    else:
+        return redirect(url_for('dashboard_admin'))
 
 if __name__ == '__main__':
     app.run(debug=True)

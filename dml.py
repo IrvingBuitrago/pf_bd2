@@ -25,12 +25,16 @@ class DML:
         cur = self.db.cursor()
         self.cursor = cur
 
-    def consultar(self, query, parameters=None):
+    def consultar(self, query, parameters=None, fetchall=False):
         if parameters:
             self.cursor.execute(query, parameters)
         else:
             self.cursor.execute(query)
-        return self.cursor.fetchone()
+
+        if fetchall:
+            return self.cursor.fetchall()
+        else:
+            return self.cursor.fetchone()
 
 
     def insertar(self, query2, values):
