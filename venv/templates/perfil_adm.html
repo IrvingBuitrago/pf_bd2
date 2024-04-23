@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Admin</title>
+</head>
+<body>
+    <h2>Perfil de Admin</h2>
+    {% if result %}
+        {% for row in result %}
+            <p>Nombre de usuario: {{ row[1] }}</p>
+            <p>Nombre: {{ row[4] }}</p>
+            <p>Apellido: {{ row[5] }}</p>
+            <p>Correo Electrónico: {{ row[3] }}</p>
+            <p>Rol: {{ row[6] }}</p>
+            <p>Teléfono Celular: {{ row[8] }}</p>
+        {% endfor %}
+    {% else %}
+        <p>No se encontraron datos para mostrar.</p>
+    {% endif %}
+</body>
+</html>
