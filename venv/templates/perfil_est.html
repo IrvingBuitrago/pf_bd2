@@ -9,17 +9,21 @@
     <h2>Perfil de Estudiante</h2>
     {% if result %}
         {% for row in result %}
-            <p>Nombre de usuario: {{ row[1] }}</p>
-            <p>Nombre: {{ row[4] }}</p>
-            <p>Apellido: {{ row[5] }}</p>
-            <p>Correo Electrónico: {{ row[3] }}</p>
-            <p>Rol: {{ row[6] }}</p>
-            <p>Carrera: {{ row[7] }}</p>
-            <p>Año de estudio: {{ row[9] }}</p>
-            <p>Teléfono Celular: {{ row[8] }}</p>
+            <form action="/perfil/estudiante" method="POST">
+                <p>Nombre de usuario: {{ row[1] }}</p>
+                <p>Nombre: <input type="text" name="first_name" value="{{ row[4] }}"></p>
+                <p>Apellido: <input type="text" name="last_name" value="{{ row[5] }}"></p>
+                <p>Correo Electrónico: <input type="text" name="email" value="{{ row[3] }}"></p>
+                <p>Rol: {{ row[6] }}</p>
+                <p>Carrera: <input type="text" name="career" value="{{ row[7] }}"></p>
+                <p>Año de estudio: <input type="text" name="year_study" value="{{ row[9] }}"></p>
+                <p>Teléfono Celular: <input type="text" name="cellphone" value="{{ row[8] }}"></p>
+                <input type="submit" value="Actualizar">
+            </form>
         {% endfor %}
     {% else %}
         <p>No se encontraron datos para mostrar.</p>
     {% endif %}
+    <a href="{{ url_for('dashboard_estudiante') }}">Volver al dashboard de estudiantes</a>
 </body>
 </html>

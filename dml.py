@@ -41,8 +41,8 @@ class DML:
         self.cursor.execute(query2, values)
         self.db.commit()
 
-    def actualizar(self, query):
-        self.cursor.execute(query)
+    def actualizar(self, query, updated_data):
+        self.cursor.execute(query, updated_data)
         self.db.commit()
 
     def eliminar(self, query):

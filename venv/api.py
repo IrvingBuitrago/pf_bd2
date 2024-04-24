@@ -7,7 +7,7 @@ app.secret_key = 'mykey'
 
 instancia = myconex
 
-@app.route('/dash/estudiantes', methods= ['GET', 'POST'])
+@app.route('/dash/estudiante', methods= ['GET', 'POST'])
 def dashboard_estudiante():
     if 'user' in session:
         username = session['user']
@@ -142,8 +142,37 @@ def perfil_estudiante():
                 return f'Error: {str(e)}'
         else:
             return redirect(url_for('logIn'))
+    elif request.method == 'POST':
+        if 'user' in session:
+            instancia.conectar()
+            # Obtener los datos del formulario
+            updated_data = {
+                'first_name': request.form['first_name'],
+                'last_name': request.form['last_name'],
+                'email': request.form['email'],
+                'career': request.form['career'],
+                'year_study': request.form['year_study'],
+                'cellphone': request.form['cellphone']
+            }
+            # Actualizar los datos del usuario en la base de datos
+            query = '''
+                UPDATE users 
+                SET first_name = %(first_name)s, last_name = %(last_name)s, 
+                    email = %(email)s, career = %(career)s, year_study = %(year_study)s, 
+                    cellphone = %(cellphone)s
+                WHERE user_name = %(username)s
+            '''
+            # Obtener el nombre de usuario de la sesión
+            username = session['user']['username']
+            updated_data['username'] = username  # Agregar el nombre de usuario al diccionario
+            instancia.actualizar(query, updated_data)
+            instancia.cerrar_conex()
+            # Redirigir de vuelta al perfil después de la actualización
+            return redirect(url_for('perfil_estudiante'))
+        else:
+            return redirect(url_for('logIn'))
     else:
-        return redirect(url_for('dashboard_estudiante'))
+        return redirect(url_for('logIn'))
 
 @app.route('/perfil/administrativo', methods=['GET', 'POST'])
 def perfil_administrativo():
@@ -165,8 +194,33 @@ def perfil_administrativo():
                 return f'Error: {str(e)}'
         else:
             return redirect(url_for('logIn'))
+    elif request.method == 'POST':
+        if 'user' in session:
+            instancia.conectar()
+            # Obtener los datos del formulario
+            updated_data = {
+                'first_name': request.form['first_name'],
+                'last_name': request.form['last_name'],
+                'email': request.form['email'],
+                'cellphone': request.form['cellphone']
+            }
+            # Actualizar los datos del usuario en la base de datos
+            query = '''
+                UPDATE users 
+                SET first_name = %(first_name)s, last_name = %(last_name)s, 
+                    email = %(email)s, cellphone = %(cellphone)s
+                WHERE user_name = %(username)s
+            '''
+            # Obtener el nombre de usuario de la sesión
+            username = session['user']['username']
+            updated_data['username'] = username  # Agregar el nombre de usuario al diccionario
+            instancia.actualizar(query, updated_data)
+            instancia.cerrar_conex()
+            # Redirigir de vuelta al perfil después de la actualización
+            return redirect(url_for('perfil_administrativo'))
+        else:
+            return redirect(url_for('logIn'))
     else:
-        return redirect(url_for('dashboard_admin'))
-
+        return redirect(url_for('logIn'))
 if __name__ == '__main__':
     app.run(debug=True)
