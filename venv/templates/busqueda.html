@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados de Búsqueda</title>
+</head>
+<body>
+    <form action="/dash/estudiante" method="POST">
+        <input type="text" name="title" placeholder="Buscar por título">
+        <button type="submit">Buscar</button>
+    </form>
+    <h2>Resultados de Búsqueda</h2>
+    {% if result %}
+        <div class="vacancy-container">
+            {% for row in result %}
+                <a href="{{ url_for('dashboard_estudiante', vacante_id=row[4]) }}" class="vacancy-link">
+                    <div class="vacancy-box">
+                        <p><strong>{{ row[0] }}</strong></p>
+                        <p>Nombre del puesto: {{ row[1] }}</p>
+                        <p>Ubicación: {{ row[2] }}</p>
+                        <p>Vacantes disponibles: {{ row[3] }}</p>
+                    </div>
+                    </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No se encontraron datos para mostrar.</p>
+    {% endif %}
+</body>
+</html>
+
