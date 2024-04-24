@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Empresas</title>
-</head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylereg_emp.css') }}"></head>
 <body>
     <h2>Registro de Empresas</h2>
-    {% if error %}
-    <p style="color: red;">{{ error }}</p>
-    {% endif %}
+
     <form action="/registro/empresas" method="POST">
         <label for="name">Nombre de la Empresa:</label><br>
         <input type="text" id="name" name="name" required><br>

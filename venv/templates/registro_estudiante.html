@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Estudiante</title>
+    <link rel="stylesheet" href="static/stylereg_est.css">
 </head>
 <body>
     <h1>Registro de Estudiante</h1>
-    {% if error %}
-        <p>{{ error }}</p>
-    {% endif %}
     <form action="/registro" method="POST">
         <label for="username">Nombre de usuario:</label>
         <input type="text" id="username" name="username" required><br>
@@ -21,8 +19,10 @@
         <input type="text" id="first_name" name="first_name" required><br>
         <label for="last_name">Apellido:</label>
         <input type="text" id="last_name" name="last_name" required><br>
-        <label for="rol">Rol:</label>
-        <input type="text" id="rol" name="rol" required><br>
+        <select id="rol" name="rol" required>
+            <option value="Administrativo">Administrativo</option>
+            <option value="Estudiante">Estudiante</option>
+        </select><br>
         <label for="career">Carrera:</label>
         <input type="text" id="career" name="career" ><br>
         <label for="cellphone">Teléfono celular:</label>
@@ -31,5 +31,6 @@
         <input type="text" id="year_study" name="year_study" ><br>
         <input type="submit" value="Registrarse">
     </form>
+    <p>¿Ya tienes una cuenta? <a href="{{ url_for('logIn') }}">Iniciar sesión</a></p>
 </body>
 </html>

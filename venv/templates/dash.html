@@ -12,6 +12,12 @@
         <button type="submit">Ver Perfil</button>
     </form>
 
+    <!-- Barra de búsqueda -->
+    <form action="/dash/estudiante" method="POST">
+        <input type="text" name="title" placeholder="Buscar por título">
+        <button type="submit">Buscar</button>
+    </form>
+
     <!-- Mostrar los datos de la consulta -->
     {% if result %}
         <div class="vacancy-container">

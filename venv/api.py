@@ -9,17 +9,61 @@ instancia = myconex
 
 @app.route('/dash/estudiante', methods= ['GET', 'POST'])
 def dashboard_estudiante():
-    if 'user' in session:
-        username = session['user']
-        return render_template('dash.html')
+    if request.method == 'GET':
+        if 'user' in session:
+            username = session['user']
+            instancia.conectar()
+            query = 'SELECT * FROM float_vacancy'
+            result = instancia.consultar(query, fetchall= True)
+            instancia.cerrar_conex()
+            try:
+                if result:
+                    result_row = result[0]
+                    return render_template('dash.html', result=result)
+                else:
+                    return "No se encontraron datos para mostrar."
+            except Exception as e:
+                return f'Error: {str(e)}'
+        else:
+            return redirect(url_for('logIn'))
+    elif request.method == 'POST':
+        if 'user' in session:
+            username = session['user']
+            title = request.form['title']
+            instancia.conectar()
+            query = 'SELECT * FROM float_vacancy_search WHERE title LIKE %s'
+            result = instancia.consultar(query, ('%' + title + '%',), fetchall= True)
+            instancia.cerrar_conex()
+            try:
+                if result:
+                    result_row = result[0]
+                    return render_template('busqueda.html', result=result)
+                else:
+                    return "No se encontraron datos para mostrar"
+            except Exception as e:
+                return f'Error: {str(e)}'
     else:
         return redirect(url_for('logIn'))
 
 @app.route('/dash/admin', methods=['GET'])
 def dashboard_admin():
-    if 'user' in session:
-        username = session['user']
-        return render_template('dash_admin.html')
+    if request.method == 'GET':
+        if 'user' in session:
+            username = session['user']
+            instancia.conectar()
+            # query = 'SELECT * FROM requests_sector_view'
+            # result = instancia.consultar(query)
+            # print(result)
+            instancia.cerrar_conex()
+            try:
+                if result:
+                    return render_template('dash_admin.html')
+                else:
+                    return "No se encontraron datos para mostrar."
+            except Exception as e:
+                return f'Error: {str(e)}'
+        else:
+            return redirect(url_for('logIn'))
     else:
         return redirect(url_for('logIn'))
 
@@ -41,11 +85,13 @@ def logIn():
                     # Si el usuario es estudiante, redirigir al dashboard de estudiantes
                     instancia.cerrar_conex()
                     return redirect(url_for('dashboard_estudiante'))
-                else:
+                elif rol == 'Administrativo':
                     session['user'] = {'username': username, 'rol': rol}
                     # Si el usuario no es estudiante, redirigir al dashboard de administrador
                     instancia.cerrar_conex()
                     return redirect(url_for('dashboard_admin'))
+                else:
+                    return redirect(url_for('registro'))
         except Exception as e:
             return render_template('login.html', error=f'{str(e)}')
         else:
@@ -222,5 +268,6 @@ def perfil_administrativo():
             return redirect(url_for('logIn'))
     else:
         return redirect(url_for('logIn'))
+
 if __name__ == '__main__':
     app.run(debug=True)
