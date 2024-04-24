@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Admin</title>
+    <link rel="stylesheet" href="CSS/styleperfiladm.css">
+</head>
+<body>
+    <h2>Perfil de Admin</h2>
+    {% if result %}
+        {% for row in result %}
+            <form action="/perfil/administrativo" method="POST">
+                <p>Nombre de usuario: {{ row[1] }}</p>
+                <p>Nombre: <input type="text" name="first_name" value="{{ row[4] }}"></p>
+                <p>Apellido: <input type="text" name="last_name" value="{{ row[5] }}"></p>
+                <p>Correo Electrónico: <input type="text" name="email" value="{{ row[3] }}"></p>
+                <p>Rol: {{ row[6] }}</p>
+                <p>Teléfono Celular: <input type="text" name="cellphone" value="{{ row[8] }}"></p>
+                <input type="submit" value="Actualizar">
+            </form>
+        {% endfor %}
+        <a href="dash_admin.html">Volver al dashboard de administrador</a>
+    {% else %}
+        <p>No se encontraron datos para mostrar.</p>
+    {% endif %}
+</body>
+</html>

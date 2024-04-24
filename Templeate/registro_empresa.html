@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Empresas</title>
+    <link rel="stylesheet" href="CSS/stylereg_emp.css">
+</head>
+<body>
+    <h2>Registro de Empresas</h2>
+
+    <form action="/registro/empresas" method="POST">
+        <label for="name">Nombre de la Empresa:</label><br>
+        <input type="text" id="name" name="name" required><br>
+        <label for="direction">Dirección:</label><br>
+        <input type="text" id="direction" name="direction" required><br>
+        <label for="telephone">Teléfono:</label><br>
+        <input type="tel" id="telephone" name="telephone" required><br>
+        <label for="email">Correo Electrónico:</label><br>
+        <input type="email" id="email" name="email" required><br>
+        <label for="contact_name">Nombre del Contacto:</label><br>
+        <input type="text" id="contact_name" name="contact_name" required><br>
+        <label for="contact_last_name">Apellido del Contacto:</label><br>
+        <input type="text" id="contact_last_name" name="contact_last_name" required><br>
+        <label for="contact_email">Correo Electrónico del Contacto:</label><br>
+        <input type="email" id="contact_email" name="contact_email" required><br>
+        <label for="contact_telephone">Teléfono del Contacto:</label><br>
+        <input type="tel" id="contact_telephone" name="contact_telephone" required><br><br>
+        <input type="submit" value="Registrar">
+    </form>
+</body>
+</html>
