@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Estudiantes</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <h2>Panel de Estudiantes</h2>
@@ -18,16 +17,17 @@
         <button type="submit">Buscar</button>
     </form>
 
-    <!-- Mostrar los datos de la consulta -->
+
     {% if result %}
         <div class="vacancy-container">
             {% for row in result %}
-                <a href="#" class="vacancy-link">
+                <a href="{{ url_for('detalle_vacante', vacante_id=row[5]) }}" class="vacancy-link">
                     <div class="vacancy-box">
                         <p><strong>{{ row[0] }}</strong></p>
                         <p>Puesto: {{ row[1] }}</p>
                         <p>Ubicación: {{ row[2] }}</p>
                         <p>Vacantes disponibles: {{ row[3] }}</p>
+                        <p>Publicado {{ row[4] }}</p>
                     </div>
                 </a>
             {% endfor %}

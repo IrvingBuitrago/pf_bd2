@@ -14,12 +14,13 @@
     {% if result %}
         <div class="vacancy-container">
             {% for row in result %}
-                <a href="{{ url_for('dashboard_estudiante', vacante_id=row[4]) }}" class="vacancy-link">
+                <a href="{{ url_for('detalle_vacante', vacante_id=row[5]) }}" class="vacancy-link">
                     <div class="vacancy-box">
                         <p><strong>{{ row[0] }}</strong></p>
                         <p>Nombre del puesto: {{ row[1] }}</p>
                         <p>Ubicación: {{ row[2] }}</p>
                         <p>Vacantes disponibles: {{ row[3] }}</p>
+                        <p>Publicado {{ row[4] }}</p>
                     </div>
                     </a>
             {% endfor %}

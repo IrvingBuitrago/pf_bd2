@@ -44,8 +44,8 @@ class DML:
         self.cursor.execute(query, updated_data)
         self.db.commit()
 
-    def eliminar(self, query):
-        self.cursor.execute(query)
+    def eliminar(self, query, delete_data):
+        self.cursor.execute(query, delete_data)
         self.db.commit()
 
     def imprimir(self):
